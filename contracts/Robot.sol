@@ -45,6 +45,8 @@ contract Robot is ERC721, Ownable {
 
     constructor() ERC721("Robot", "BOT") {
         mint(0, 0, 0, 0, 0);
+        mint(1, 1, 1, 1, 1);
+        mint(2, 2, 2, 2, 2);
     }
 
     function totalSupply() external view returns (uint256) {

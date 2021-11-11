@@ -16,13 +16,13 @@ contract('Robot', (accounts) => {
         const instance = await Robot.deployed();
         const supply = await instance.totalSupply.call();
 
-        assert.equal(supply.valueOf(), 1, "Incorrect Supply!");
+        assert.equal(supply.valueOf(), 3, "Incorrect Supply!");
     });
 
     it('Check Owner Balance', async () => {
         const instance = await Robot.deployed();
         const balance = await instance.balanceOf(accounts[0]);
-        assert.equal(balance.valueOf(), 1, "Incorrect Supply!");
+        assert.equal(balance.valueOf(), 3, "Incorrect Supply!");
     });
 
     it('Check NFT Owner', async () => {
@@ -35,7 +35,7 @@ contract('Robot', (accounts) => {
         const instance = await Robot.deployed();
         const robotsArray = await instance.robotsList(accounts[0]);
 
-        assert.equal(robotsArray.length, 1, "Incorrect List Length!");
+        assert.equal(robotsArray.length, 3, "Incorrect List Length!");
 
         for (let i = 0; i < robotsArray.length; i++) {
             assert.equal(robotsArray[i], i, "Incorrect List " + i + " Element!");
@@ -55,7 +55,7 @@ contract('Robot', (accounts) => {
         const instance = await Robot.deployed();
         const robotsArray = await instance.robotsList(accounts[0]);
 
-        assert.equal(robotsArray.length, 0, "Incorrect List Length!");
+        assert.equal(robotsArray.length, 2, "Incorrect List Length!");
     });
 
     it('Check Get Robots Account 1 List', async () => {
