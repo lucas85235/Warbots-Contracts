@@ -2,7 +2,6 @@
 pragma solidity >=0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
@@ -14,17 +13,17 @@ enum PartsType {
     LEGS
 }
 
-contract Part is ERC721, Ownable {
+struct PartContains {
+    uint256 serial;
+    PartsType partType;
+}
+
+contract Part is ERC721 {
 
     using SafeMath for uint256;
     using Strings for string;
 
-    struct Attributes {
-        uint256 serial;
-        PartsType partType;
-    }
-
-    Attributes[] private parts;
+    PartContains[] private parts;
     mapping (address => uint256[]) private partsInWallet;
 
     constructor() ERC721("Part", "PART") {
@@ -33,9 +32,10 @@ contract Part is ERC721, Ownable {
         mint(0, PartsType.ARMSLEFT);
         mint(0, PartsType.ARMSRIGHT);
         mint(0, PartsType.LEGS);
+        mint(1, PartsType.HEAD);
     }
 
-    function totalSupply() external view returns (uint256) {
+    function totalSupply() public view returns (uint256) {
         return parts.length;
     }
 
@@ -57,12 +57,12 @@ contract Part is ERC721, Ownable {
     }
 
     function mint(uint256 serial, PartsType partType)
-        public onlyOwner returns (bool) {
+        public returns (bool) {
 
         uint256 newItemID = parts.length;
 
         parts.push(
-            Attributes(serial, partType)
+            PartContains(serial, partType)
         );
 
         _safeMint(msg.sender, newItemID);
@@ -75,7 +75,7 @@ contract Part is ERC721, Ownable {
         return partsInWallet[from];
     }
 
-    function getPart(uint256 tokenID) public view returns (Attributes memory) {
+    function getPart(uint256 tokenID) public view returns (PartContains memory) {
         return parts[tokenID];
     }
 
@@ -86,5 +86,15 @@ contract Part is ERC721, Ownable {
         }
 
         partsInWallet[sender].pop();
+    }
+
+    function isApprovedOrOwner(address spender, uint256 tokenId) external view returns (bool) {
+        bool result = _isApprovedOrOwner(spender, tokenId);
+        return result;
+    }
+
+    function burn(uint256 tokenId) public {
+        removeInOrder(msg.sender, tokenId);
+        _burn(tokenId);
     }
 }
