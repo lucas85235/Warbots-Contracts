@@ -16,7 +16,7 @@ contract('Robot', (accounts) => {
         const instance = await Robot.deployed();
         const supply = await instance.totalSupply.call();
 
-        assert.equal(supply.valueOf(), 3, "Incorrect Supply!");
+        assert.equal(supply.valueOf(), 1, "Incorrect Supply!");
     });
 
     it('Check Account 0 Balance', async () => {
