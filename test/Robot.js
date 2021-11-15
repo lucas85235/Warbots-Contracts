@@ -19,55 +19,27 @@ contract('Robot', (accounts) => {
         assert.equal(supply.valueOf(), 3, "Incorrect Supply!");
     });
 
-    it('Check Owner Balance', async () => {
+    it('Check Account 0 Balance', async () => {
         const instance = await Robot.deployed();
         const balance = await instance.balanceOf(accounts[0]);
-        assert.equal(balance.valueOf(), 3, "Incorrect Supply!");
+
+        assert.equal(balance.valueOf(), 1, "Incorrect Account 0 Balance!");
     });
 
     it('Check NFT Owner', async () => {
         const instance = await Robot.deployed();
-        const balance = await instance.ownerOf(0);
-        assert.equal(balance.valueOf(), accounts[0], "Incorrect Supply!");
+        const owner = await instance.ownerOf(0);
+
+        assert.equal(owner.valueOf(), accounts[0], "Incorrect Owner!");
     });
 
-    it('Check Get Robots List', async () => {
-        const instance = await Robot.deployed();
-        const robotsArray = await instance.robotsList(accounts[0]);
+    // it('Check NFT Transfer', async () => {
+    //     const instance = await Robot.deployed();
+    //     await instance.transferFrom(accounts[0], accounts[1], 0);
+    //     const owner = await instance.ownerOf(0);
 
-        assert.equal(robotsArray.length, 3, "Incorrect List Length!");
-
-        for (let i = 0; i < robotsArray.length; i++) {
-            assert.equal(robotsArray[i], i, "Incorrect List " + i + " Element!");
-        }
-    });
-
-    it('Check NFT Transfer', async () => {
-        const instance = await Robot.deployed();
-        await instance.transferFrom(accounts[0], accounts[1], 0);
-
-        const balance = await instance.ownerOf(0);
-
-        assert.equal(balance.valueOf(), accounts[1], "Incorrect Supply!");
-    });
-
-    it('Check Get Robots Account 0 List', async () => {
-        const instance = await Robot.deployed();
-        const robotsArray = await instance.robotsList(accounts[0]);
-
-        assert.equal(robotsArray.length, 2, "Incorrect List Length!");
-    });
-
-    it('Check Get Robots Account 1 List', async () => {
-        const instance = await Robot.deployed();
-        const robotsArray = await instance.robotsList(accounts[1]);
-
-        assert.equal(robotsArray.length, 1, "Incorrect List Length!");
-
-        for (let i = 0; i < robotsArray.length; i++) {
-            assert.equal(robotsArray[i], i, "Incorrect List " + i + " Element!");
-        }
-    });
+    //     assert.equal(owner.valueOf(), accounts[1], "Incorrect Owner!");
+    // });
 
     it('Check Get Robot Parts', async () => {
         const instance = await Robot.deployed();
@@ -82,11 +54,9 @@ contract('Robot', (accounts) => {
 
     it('Check Change Robot Head Part', async () => {
         const instance = await Robot.deployed();
-        await instance.updateHead(0, 1, { from: accounts[1] });
-
+        await instance.updateHead(0, 5, { from: accounts[0] });
         const robotAttr = await instance.getRobotParts(0);
 
         assert.equal(robotAttr[0], 1, "Incorrect Head Part!");
     });
-
 })
