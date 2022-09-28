@@ -1,69 +1,61 @@
-// SPDX-License-Identifier: MIT
-pragma solidity >=0.8.0;
+/*
+ SPDX-License-Identifier: MIT
+*/
+pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
-import "@openzeppelin/contracts/utils/Strings.sol";
 
-enum PartsType {
-    HEAD,
-    BODY,
-    ARMSLEFT,
-    ARMSRIGHT,
-    LEGS
-}
+contract Part is ERC721Enumerable, ERC721URIStorage {
+    using Counters for Counters.Counter;
+    Counters.Counter private _tokenIdCounter;
 
-struct PartContains {
-    uint256 serial;
-    PartsType partType;
-}
+    constructor() ERC721("Robot Part", "RPT") {}
 
-contract Part is ERC721Enumerable {
+    function mint(address _wallet, string memory _tokenURI)
+        public
+        returns (uint256)
+    {
+        uint256 tokenId = _tokenIdCounter.current();
 
-    using SafeMath for uint256;
-    using Strings for string;
+        _safeMint(_wallet, tokenId);
+        _setTokenURI(tokenId, _tokenURI);
+        _tokenIdCounter.increment();
 
-    PartContains[] private parts;
-
-    constructor() ERC721("Part", "PART") {
-        // Robot 0
-        mint(0, PartsType.HEAD);
-        mint(0, PartsType.BODY);
-        mint(0, PartsType.ARMSLEFT);
-        mint(0, PartsType.ARMSRIGHT);
-        mint(0, PartsType.LEGS);
-
-        // Robot 1
-        mint(1, PartsType.HEAD);
+        return tokenId;
     }
 
-    function mint(uint256 serial, PartsType partType) public returns (bool) {
-
-        // Regra de Acesso ao metodo?
-        // Pool limite para a criação?
-        // Mint de parte por parte ou cinco partes
-        // Mint de partes Aleatorias?
-
-        uint256 newItemID = parts.length;
-
-        parts.push(
-            PartContains(serial, partType)
-        );
-
-        _safeMint(msg.sender, newItemID);
-        return true;
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override(ERC721, ERC721Enumerable) {
+        super._beforeTokenTransfer(from, to, tokenId);
     }
 
-    function burn(uint256 tokenId) public {
-        _burn(tokenId);
+    function _burn(uint256 tokenId)
+        internal
+        override(ERC721, ERC721URIStorage)
+    {
+        super._burn(tokenId);
     }
 
-    function getPart(uint256 tokenID) public view returns (PartContains memory) {
-        return parts[tokenID];
+    function tokenURI(uint256 tokenId)
+        public
+        view
+        override(ERC721, ERC721URIStorage)
+        returns (string memory)
+    {
+        return super.tokenURI(tokenId);
     }
 
-    function isApprovedOrOwner(address spender, uint256 tokenId) external view returns (bool) {
-        bool result = _isApprovedOrOwner(spender, tokenId);
-        return result;
+    function supportsInterface(bytes4 interfaceId)
+        public
+        view
+        override(ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
     }
 }

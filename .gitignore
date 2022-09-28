@@ -4,3 +4,5 @@ build
 node_modules
 deploy_mnemonic.key
 .secret
+
+package-lock.json

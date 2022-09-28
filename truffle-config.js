@@ -3,12 +3,11 @@ const fs = require('fs');
 const mnemonic = fs.readFileSync(".secret").toString().trim();
 
 module.exports = {
-
   networks: {
     development: {
-      host: "localhost",
+      host: "127.0.0.1",
       port: 7545,
-      network_id: "5777"
+      network_id: "*"
     },
     testnet: {
       provider: () => new HDWalletProvider(mnemonic, "https://data-seed-prebsc-1-s1.binance.org:8545"),
@@ -18,11 +17,11 @@ module.exports = {
       skipDryRun: true
     },
     ropsten: {
-      provider: function() {
+      provider: function () {
         return new HDWalletProvider(mnemonic, "https://ropsten.infura.io/v3/4e005d26c1214d4bb6a731bb3e73b67f")
       },
       network_id: 3,
-      gas: 4000000      //make sure this gas allocation isn't over 4M, which is the max
+      gas: 4000000
     }
   },
 
@@ -35,15 +34,6 @@ module.exports = {
   compilers: {
     solc: {
       version: "0.8.0",
-
-      // docker: true,        // Use "0.5.1" you've installed locally with docker (default: false)
-      // settings: {          // See the solidity docs for advice about optimization and evmVersion
-      //  optimizer: {
-      //    enabled: false,
-      //    runs: 200
-      //  },
-      //  evmVersion: "byzantium"
-      // }
     }
   },
 };
