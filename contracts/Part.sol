@@ -26,19 +26,8 @@ contract Part is ERC721Enumerable, ERC721URIStorage {
         return tokenId;
     }
 
-    function _beforeTokenTransfer(
-        address from,
-        address to,
-        uint256 tokenId
-    ) internal override(ERC721, ERC721Enumerable) {
-        super._beforeTokenTransfer(from, to, tokenId);
-    }
-
-    function _burn(uint256 tokenId)
-        internal
-        override(ERC721, ERC721URIStorage)
-    {
-        super._burn(tokenId);
+    function burn(uint256 _tokenId) public {
+        _burn(_tokenId);
     }
 
     function tokenURI(uint256 tokenId)
@@ -57,5 +46,20 @@ contract Part is ERC721Enumerable, ERC721URIStorage {
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
+    }
+
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 tokenId
+    ) internal override(ERC721, ERC721Enumerable) {
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    function _burn(uint256 tokenId)
+        internal
+        override(ERC721, ERC721URIStorage)
+    {
+        super._burn(tokenId);
     }
 }
