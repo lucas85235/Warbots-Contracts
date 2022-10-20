@@ -9,41 +9,38 @@ contract('Part', (accounts) => {
         const instance = await Part.deployed();
         const name = await instance.name.call();
 
-        assert.equal(name.valueOf(), "Robot Part", "Incorrect Name!");
+        assert.equal(name.valueOf(), "Warbot Part", "Incorrect Name!");
     });
 
     it('Mint And Check Total Supply', async () => {
         const instance = await Part.deployed();
 
-        await instance.mint(accounts[0], "0", { from: accounts[0] });
-        await instance.mint(accounts[0], "1", { from: accounts[0] });
-        await instance.mint(accounts[0], "2", { from: accounts[0] });
-        await instance.mint(accounts[0], "3", { from: accounts[0] });
-        await instance.mint(accounts[0], "4", { from: accounts[0] });
-        await instance.mint(accounts[0], "5", { from: accounts[0] });
-
+        await instance.mintPart(accounts[0], 1, { from: accounts[0] });
+        await instance.mintPart(accounts[0], 1, { from: accounts[0] });
+        await instance.mintPart(accounts[0], 1, { from: accounts[0] });
+        
         const supply = await instance.totalSupply.call();
 
-        assert.equal(supply.valueOf(), 6, "Incorrect Total Supply!");
+        assert.equal(supply.valueOf(), 3, "Incorrect Total Supply!");
     });
 
     it('Check Account 0 Balance', async () => {
         const instance = await Part.deployed();
         const balance = await instance.balanceOf(accounts[0]);
-        assert.equal(balance.valueOf(), 6, "Incorrect Account 0 Balance!");
+        assert.equal(balance.valueOf(), 3, "Incorrect Account 0 Balance!");
     });
 
     it('Check NFT Owner', async () => {
         const instance = await Part.deployed();
-        const owner = await instance.ownerOf(5);
+        const owner = await instance.ownerOf(2);
         assert.equal(owner.valueOf(), accounts[0], "Incorrect Owner!");
     });
 
     it('Check NFT Transfer', async () => {
         const instance = await Part.deployed();
-        await instance.transferFrom(accounts[0], accounts[1], 5);
+        await instance.transferFrom(accounts[0], accounts[1], 2);
 
-        const owner = await instance.ownerOf(5);
+        const owner = await instance.ownerOf(2);
 
         assert.equal(owner.valueOf(), accounts[1], "Incorrect Supply!");
     });
@@ -52,7 +49,7 @@ contract('Part', (accounts) => {
         const instance = await Part.deployed();
         const balance = await instance.balanceOf(accounts[0]);
 
-        assert.equal(balance.valueOf(), 5, "Incorrect Account 0 Balance!");
+        assert.equal(balance.valueOf(), 2, "Incorrect Account 0 Balance!");
     });
 
     it('Check Account 1 Balance After Transfer', async () => {
@@ -64,7 +61,7 @@ contract('Part', (accounts) => {
 
     it('Check Burn', async () => {
         const instance = await Part.deployed();
-        await instance.burn(5, { from: accounts[1] });
+        await instance.burn(2, { from: accounts[1] });
         const balance = await instance.balanceOf(accounts[1]);
 
         assert.equal(balance.valueOf(), 0, "Incorrect Account 1 Balance!");
@@ -74,6 +71,21 @@ contract('Part', (accounts) => {
         const instance = await Part.deployed();
         const supply = await instance.totalSupply.call();
 
-        assert.equal(supply.valueOf(), 5, "Incorrect Total Supply!");
+        assert.equal(supply.valueOf(), 2, "Incorrect Total Supply!");
+    });
+
+    it('Mint Robot And Check Total Supply', async () => {
+        const instance = await Part.deployed();
+
+        await instance.mintRobot(accounts[0], 1, { from: accounts[0] });
+        const supply = await instance.totalSupply.call();
+
+        assert.equal(supply.valueOf(), 7, "Incorrect Total Supply!");
+    });
+
+    it('Check Account 0 Balance After Mint Robot', async () => {
+        const instance = await Part.deployed();
+        const balance = await instance.balanceOf(accounts[0]);
+        assert.equal(balance.valueOf(), 7, "Incorrect Account 0 Balance!");
     });
 })
