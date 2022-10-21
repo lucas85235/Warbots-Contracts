@@ -77,7 +77,7 @@ contract Part is ERC721Enumerable, ERC721URIStorage, Ownable {
         returns (bool)
     {
         uint256 tokenId = _tokenIdCounter.current();
-        uint256 robotIndex = createRandom(robots.length - 1);
+        uint256 robotIndex = createRandom(robots.length);
 
         _safeMint(_wallet, tokenId);
         _setTokenURI(
